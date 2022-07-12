@@ -1,22 +1,28 @@
-
-
 let idRecuperation = new URL(window.location.href).searchParams.get('id');
 //recupération des paramètres ID depuis l'adresse URL
 console.log(idRecuperation);
 
-let image = document.querySelector("item__img");//récupération du selecteur css afin de pouvoir insérer l'image
-let name = document.getElementById("title");//récupération de l'élément par son id pour injection 
-let price = document.getElementById("price");//récupération du prix
-let productDescription = document.getElementById("description");//récupération de la dexcription du produit
-let colorTable = document.getElementById("colors");//récupération du tableau des couleur product
+fetch('http://localhost:3000/api/products/' + idRecuperation)
+  .then((response) => {
+    if (response.ok) return response.json();
+    else return res.status(500).json({ error: 'Une erreur est survenue.' });
+  })
+  .then((product) => {
+    console.log(product);
+    //const canape = product.colors;
+    document.querySelector(
+      '#description'
+    ).innerHTML += `${product.description}`;
+    document.querySelector('#title').innerHTML += `${product.name}`;
+    document.querySelector('#price').innerHTML += `${product.price}`;
+    document.querySelector(
+      '.item__img'
+    ).innerHTML += `<img src='${product.imageUrl}' alt='${product.altTxt}' />`;
 
-//création de la fonction de récupération des produits 
-let product;
-
-     fetch('http://localhost:3000/api/products')
-    .then((res) => res.json()
-    .then( product = json )
-    .catch((err) => console  && console.error(err)));
-
-
-console.log(product);
+    for (let color of product) {
+      const optionColor = document.createElement('option');
+      document.querySelector('#colors').appendChild(optionColor);
+      optionColor.value += color;
+      optionColor.innerHtml += color;
+    }
+  });
