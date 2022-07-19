@@ -2,87 +2,92 @@ let idRecuperation = new URL(window.location.href).searchParams.get('id');
 //recupération des paramètres ID depuis l'adresse URL
 console.log(idRecuperation);
 
-fetch('http://localhost:3000/api/products/' + idRecuperation) // appel des elements de l'api
-  .then((res) => {
-    
+fetch("http://localhost:3000/api/products/" + idRecuperation)
+  .then((response) => {
+    if(response.ok) {
+      response.json()
+      .then((product) => { // insertion des éléments sur la page html 
+        document.querySelector(".item__img").innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}" />`;
+        document.getElementById("title").innerHTML = `${product.name}`;
+        document.getElementById("price").innerHTML = `${product.price}`;
+        document.getElementById("description").innerHTML = `${product.description}`;
+        const colorChoice = product.colors;
+        for (let color of colorChoice) {  
+          document.getElementById("colors").innerHTML += `<option value="${color}">${color}</option>`;
+        };
+      })
+      .catch((error) => {
+        alert ("produit indisponible")
+});
+    };
+  })
+  .catch((error) => {
+    alert (" server non disponible")
+  });
 
-    const response = res.json();
-    //récupération du produit par son id 
-    response.then(product => {
-      console.log(product);
-      
-      // création et intégration des élémentsq du DOM
+  // récupération élément du DOM 
 
-      let addToCart = document.getElementById('addToCart');
-      let colors = document.getElementById('colors');
-      let img = document.createElement('img');
-      let quantity = document.querySelector('#quantity');
-      let price = document.getElementById('price').innerHTML = product.price;
-      let name = document.getElementById('title').innerHTML = product.name;
-      document.querySelector(".item__img").appendChild(img);
-      document.querySelector("#colors").insertAdjacentHTML('beforeend',product.colors.map((color) =>`<option id= "valueColor" value="${color}">${color}</option>`));
-      document.getElementById("description").innerHTML = product.description;
-      img.src = product.imageUrl;
-      img.alt = product.altTxt;
-      let image = img.src;
-      let imageAlt = img.alt;
+  let addBasket = document.getElementById("addToCart");
+  let color = document.getElementById("colors");
+  let quantity = document.getElementById("quantity");
 
-      class objBasket {
-        constructor(){
-          this.id = idRecuperation;
-          this.name = product.name;
-          this.description = product.description;
-          this.imageUrl = product.imageUrl;
-          this.altText = product.altText;
-    
-        }
-      }
-      console.log(product.name);
+//----------------------------------------------------localStorage----------------------------------------------------------------------------------
 
-      // ecoute du bouton au click 
-      addToCart.addEventListener("click",(e) =>{
-        e.preventDefault();
-        let color = colors.value;
-        let quantities = Number(quantity.value);
+function getBasket() {
+  let basket = localStorage.getItem("basket");
+  if (basket == null) {
+    return [];
+  }else{
+    return JSON.parse(basket);
+  }
+};
 
-        // création des données du du tableau pour le local storage 
+// fonction d'ajout et de vérifcation même id même couleur
 
-        let productInfo = new objBasket ;
-          
-      
-        
-        // création du tableau vide pour récupérer les données 
-        let registerItem = [];
-          console.log(registerItem);
-        // condition si le local storage contient un produit 
-        if (localStorage.getItem("product")) {
-          // si des données existe, elles sont transférer dans le tableau
-          registerItem  = JSON.parse(localStorage.getItem("product"));
+function addToBasket(productPicked) {
+  let basket = getBasket();
+  let findSameProduct = basket.find( product => product.id ==productPicked.id && product.color == productPicked.color);
+  // si le produit existe déjà on ajoute la quantité 
+  if (findSameProduct != undefined) {
+    findSameProduct.quantity = parseInt(findSameProduct.quantity)+ parseInt(productPicked.quantity);
+  }
+  // sinon on créé une nouvelle ligne dans le Array
+  else {
+    basket.push(productPicked);
+  }
+  saveBaket(basket);
+  alert(" kanap ajouté au panier");
+};
+// function de sauverge du panier dans le localStorage
+function saveBaket(basket) {
+  localStorage.setItem("basket", JSON.stringify(basket));
+};
 
-          // variable de vérification couleur quantité 
-          let compareItem = registerItem.findIndex((item=> item.id === productInfo.id &&  item.color === productInfo.color ));
+//----------------------------------------------------------------Ecoute du bouton ajout au panier --------------------------------------------------------
 
-          // si même couleur on incrémente la quantité 
+addBasket.addEventListener("click", (event) => {
+  event.preventDefault();
+  // si la quantité est null
+  if (quantity.value <= 0 ) {
+    alert(" choisissez une quantité entre 1 et 100");
+  }
+  //si la couleur n'est pas choisi 
+  else if (color.value === "" || color.value === null) {
+    alert (" choisissez une couleur")
+  }
+  // si la quantité est supérieur à 100 exemplaires du même produits
+  else if (quantity.value > 100) {
+    alert (" vous avez choisi trop de produits identiques")
+  }
+  else{
+    const productpicked = {
+      id : idRecuperation,
+      color: color.value,
+      quantity : parseInt(quantity.value)
+    };
+    addToBasket(productpicked); // appel de la fonction d'ajout au basket
+  }
 
-          if (compareItem !== -1) {
-            registerItem[objBasket].quantities += quantities;
-          }
-          // si le produit n'existe pas dans le tableau je le rajoute 
-          else if (compareItem === -1){
-            registerItem.push(productInfo)
-          }
+  });
 
-          // envoi des produits dans le localStorage et conversion des chaine de caractère
-          localStorage.setItem("product", JSON.stringify(registerItem));
-        }else{
-          registerItem.push(productInfo);
-          localStorage.setItem("product", JSON.stringify(registerItem))
-        }
-        
-        console.log(productInfo);
-        console.log(registerItem);
-      });
-      });
-    });
 
-    
