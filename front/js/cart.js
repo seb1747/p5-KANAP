@@ -35,7 +35,7 @@ function removeProductOfBasket (id, color) {
 };
 // création d'un nouvel objet panier qui contiendra les éléments du localStorage id et couleur deifférente 
 const newBasket = basket.filter((item) => !(
-    item.id == deleteProduct.productId && itemColor == deleteProduct.productColor
+    item.id == deleteProduct.productId && item.color == deleteProduct.productColor
 ));
 // on sauvegarde notre panier avec la même clé
 localStorage.setItem('basket', JSON.stringify(newBasket));
@@ -57,7 +57,7 @@ function changeProductQuantity(id, color, newQuantity) {
         findSameProduct = basket.find (product => product.id == id && product.color == color);
         if (findSameProduct != undefined ) {
             findSameProduct.quantity = newQuantity;
-            alert('la quantité a été modifié')
+           //alert('la quantité a été modifié')
             window.location.href ="cart.html"
         }
         saveBasket(basket);
