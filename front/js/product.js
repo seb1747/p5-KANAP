@@ -50,16 +50,20 @@ function addToBasket(productPicked) {
   // si le produit existe déjà on ajoute la quantité 
   if (findSameProduct != undefined) {
     findSameProduct.quantity = parseInt(findSameProduct.quantity)+ parseInt(productPicked.quantity);
+    if( findSameProduct.quantity > 100) {
+      alert(" trop de produit dans le panier");
+      findSameProduct.quantity = 100;
+    }
   }
   // sinon on créé une nouvelle ligne dans le Array
   else {
     basket.push(productPicked);
   }
-  saveBaket(basket);
+  saveBasket(basket);
   alert(" kanap ajouté au panier");
 };
 // function de sauverge du panier dans le localStorage
-function saveBaket(basket) {
+function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));
 };
 
