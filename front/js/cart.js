@@ -145,3 +145,129 @@ function basketDisplay() {
                
 // rappel de la fonction d'affichage du panier
 basketDisplay(); 
+
+//--------------------------------------------------------code formulaire----------------------------------------------------------------------
+// function de récupération des éléments du DOM
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let address = document.getElementById("address");
+let city = document.getElementById("city");
+let email = document.getElementById("email");
+let newOrder = document.getElementById("order");
+
+// vérification des élément du formulaire et regex 
+email.addEventListener("input", function() {
+    let emailRegEx  = /^[a-zA-Z][\w]{1,25}@[\w]{1,25}\.[a-z]{2,10}$/;
+     // RFC 5322 regex validation
+     let emailTest = emailRegEx.test(email.value)
+     let messageError = document.getElementById("emailErrorMsg");
+     if(emailTest == false) {
+        email.style.color = "red";
+        messageError.innerHTML = "Veuillez renseigner une adresse mail valide ";
+     }
+     else if (emailTest == true ) {
+        email.style.color = "green";
+        messageError.innerHTML ="";
+
+     }
+});
+// appel de la function de validation des éléments du formulaire 
+
+function formValidationData ( input) {
+    // regex formulaire
+    let validationDataRegex = /^[a-z ,.'-]+$/i;
+    // test de la varirable regex
+    let dataTest = validationDataRegex.test (input.value);
+    let messageError = input.nextElementSibling;
+    if(dataTest == false) {
+        email.style.color = "red";
+        messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
+
+}else if (dataTest == true) {
+    email.style.color = "green";
+    messageError.innerHTML = "";
+}
+};
+//validation du prénom 
+
+firstName.addEventListener('change', function(){
+    formValidationData(this);
+});
+
+// validation du nom 
+
+lastName.addEventListener('change', function(){
+    formValidationData(this);
+});
+
+// validation de l'adresse je ne la test pas trop de format existe suivant 
+address.addEventListener('change', function(){
+    email.style.color = "green";
+});
+
+// validation de la ville
+city.addEventListener('change', function() {
+    formValidationData(this);
+});
+
+// fonction pour récupérer les produits et les contacts 
+function orderDataProduct (){
+    // on créé un tableau vide pour récupérer les produits 
+    
+
+    // crétion du tableau de récupération des données des clients 
+    let contact =  {
+        firstName : firstName.value,
+        lastName : lastName.value,
+        address : address.value,
+        city : city.value,
+        email : email.value,
+    };
+    let products =[];
+    // boucle pour récupérations des id 
+    for(let productlist of basket) {
+        let item = basket.find( p => p.id == productlist.id);
+        if ( item != undefined) {
+            // on push les id dans le tableau 
+            products.push(productlist.id);
+        }
+        else {
+            alert (" le panier est vide ");
+    }
+};
+console.log(contact);
+    // renvoi d'un objet  orderDataProduct contenant 2 tableaux pour en a l'api
+    return orderData = { contact, products};
+};
+
+// ecoute du bouton commander pour confirmation de commande
+newOrder.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (firstName.value == "" || lastName.value == "" || email.value == "" || city.value == "" || address.value == "") {
+        alert ('veuillez remplir tout les champs ')
+    }
+    else {
+        orderDataProduct();
+        let options = {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                },
+                body: JSON.stringify(orderData), 
+        }
+
+        fetch("http://localhost:3000/api/products/order",options)
+           
+        
+        .then(response => response.json())
+        .then(data => {console.log(data);
+            //on efface les données du localStorage
+            //localStorage.clear();
+            // renvoie vers la page de confirmation avec le numéro de commande 
+            window.location =  `./confirmation.html?orderid=${data.orderId}`;
+        })
+        .catch((error) => {
+            alert (error)
+    })    
+}
+});
