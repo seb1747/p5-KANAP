@@ -57,8 +57,9 @@ function changeProductQuantity(id, color, newQuantity) {
         findSameProduct = basket.find (product => product.id == id && product.color == color);
         if (findSameProduct != undefined ) {
             findSameProduct.quantity = newQuantity;
-           //alert('la quantité a été modifié')
-            window.location.href ="cart.html"
+           alert('la quantité a été modifié')
+           window.location.href ="cart.html"
+           
         }
         saveBasket(basket);
     }
@@ -70,6 +71,7 @@ function totalBasketPrice() {
     const calculPrice = (accumulator, currentValue) => accumulator + currentValue;
     let total = totalPrice.reduce(calculPrice);
     return total;
+     
 };
 
 // function on affiche le panier si celui-ci n'est pas vide 
@@ -157,7 +159,7 @@ let newOrder = document.getElementById("order");
 
 // vérification des élément du formulaire et regex 
 email.addEventListener("input", function() {
-    let emailRegEx  = /^[a-zA-Z][\w]{1,25}@[\w]{1,25}\.[a-z]{2,10}$/;
+    let emailRegEx  = /^((\w[^\W]+)[.-]?){1,}@(([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
      // RFC 5322 regex validation
      let emailTest = emailRegEx.test(email.value)
      let messageError = document.getElementById("emailErrorMsg");
@@ -262,7 +264,7 @@ newOrder.addEventListener("click", (e) => {
         .then(response => response.json())
         .then(data => {console.log(data);
             //on efface les données du localStorage
-            //localStorage.clear();
+            localStorage.clear();
             // renvoie vers la page de confirmation avec le numéro de commande 
             window.location =  `./confirmation.html?orderid=${data.orderId}`;
         })
