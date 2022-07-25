@@ -40,7 +40,7 @@ const newBasket = basket.filter((item) => !(
 // on sauvegarde notre panier avec la même clé
 localStorage.setItem('basket', JSON.stringify(newBasket));
 alert('votre produit a été retiré');
-window.location.href =  "cart.html";
+window.location.reload();
 };
 
 // fonction pour le change de quantité depuis le panier 
@@ -57,7 +57,6 @@ function changeProductQuantity(id, color, newQuantity) {
         findSameProduct = basket.find (product => product.id == id && product.color == color);
         if (findSameProduct != undefined ) {
             findSameProduct.quantity = newQuantity;
-           alert('la quantité a été modifié')
            window.location.href ="cart.html"
            
         }
@@ -125,6 +124,7 @@ function basketDisplay() {
                         let color = article.getAttribute("data-color");
                         let newQuantity = quantity.value; 
                         changeProductQuantity(id, color, newQuantity);
+                        window.location.reload();
                     });
                 });
                 // supresson d'un produit du panier 
@@ -177,16 +177,30 @@ email.addEventListener("input", function() {
 
 function formValidationData ( input) {
     // regex formulaire
-    let validationDataRegex = /^[a-z ,.'-]+$/i;
+    let validationDataRegex =/^[A-Z][A-Za-z\é\è\ê\-]+$/;
     // test de la varirable regex
     let dataTest = validationDataRegex.test (input.value);
     let messageError = input.nextElementSibling;
     if(dataTest == false) {
-        email.style.color = "red";
+        input.style.color = "red";
         messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
 
 }else if (dataTest == true) {
-    email.style.color = "green";
+    input.style.color = "green";
+    messageError.innerHTML = "";
+}
+};
+function formValidationaddress ( input) {
+    // regex adresse 
+    let validationAddressRegex = /[0-9]+\s*([a-zA-Z]+\s*[a-zA-Z]+\s)*[0-9]*/;
+    let dataTest = validationAddressRegex.test (input.value);
+    let messageError = input.nextElementSibling;
+    if(dataTest == false) {
+        input.style.color = "red";
+        messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
+
+}else if (dataTest == true) {
+    input.style.color = "green";
     messageError.innerHTML = "";
 }
 };
@@ -202,9 +216,10 @@ lastName.addEventListener('change', function(){
     formValidationData(this);
 });
 
-// validation de l'adresse je ne la test pas trop de format existe suivant 
+// validation de l'adresse 
 address.addEventListener('change', function(){
-    email.style.color = "green";
+    formValidationaddress(this);
+    
 });
 
 // validation de la ville
