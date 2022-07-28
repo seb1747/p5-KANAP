@@ -160,7 +160,6 @@ let newOrder = document.getElementById("order");
 // vérification des élément du formulaire et regex 
 email.addEventListener("input", function() {
     let emailRegEx  = /^((\w[^\W]+)[.-]?){1,}@(([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
-     // RFC 5322 regex validation
      let emailTest = emailRegEx.test(email.value)
      let messageError = document.getElementById("emailErrorMsg");
      if(emailTest == false) {
@@ -177,29 +176,30 @@ email.addEventListener("input", function() {
 
 function formValidationData ( input) {
     // regex formulaire
-    let validationDataRegex =/^[A-Z][A-Za-z\é\è\ê\-]+$/;
-    // test de la varirable regex
-    let dataTest = validationDataRegex.test (input.value);
+    let validationDataRegex =/^[A-Z][A-Za-z-\é\è\ê]+$/;
+    // test de la variable regex
+    let dataTestName = validationDataRegex.test (input.value);
     let messageError = input.nextElementSibling;
-    if(dataTest == false) {
+    if(dataTestName == false) {
         input.style.color = "red";
         messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
+        
 
-}else if (dataTest == true) {
+}else  if(dataTestName==true) {
     input.style.color = "green";
     messageError.innerHTML = "";
 }
 };
 function formValidationaddress ( input) {
     // regex adresse 
-    let validationAddressRegex = /[0-9]+\s*([a-zA-Z]+\s*[a-zA-Z]+\s)*[0-9]*/;
+    let validationAddressRegex =  /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
     let dataTest = validationAddressRegex.test (input.value);
     let messageError = input.nextElementSibling;
-    if(dataTest == false) {
+    if(!dataTest ) {
         input.style.color = "red";
         messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
 
-}else if (dataTest == true) {
+}else   {
     input.style.color = "green";
     messageError.innerHTML = "";
 }
@@ -224,7 +224,7 @@ address.addEventListener('change', function(){
 
 // validation de la ville
 city.addEventListener('change', function() {
-    formValidationData(this);
+    formValidationData;
 });
 
 // fonction pour récupérer les produits et les contacts 
@@ -262,6 +262,7 @@ newOrder.addEventListener("click", (e) => {
     e.preventDefault();
     if (firstName.value == "" || lastName.value == "" || email.value == "" || city.value == "" || address.value == "") {
         alert ('veuillez remplir tout les champs ')
+        
     }
     else {
         orderDataProduct();
