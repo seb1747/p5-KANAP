@@ -32,7 +32,7 @@ fetch("http://localhost:3000/api/products/" + idRecuperation)
   let quantity = document.getElementById("quantity");
 
 //----------------------------------------------------localStorage----------------------------------------------------------------------------------
-
+// fonction d'initialisation du local storage
 function getBasket() {
   let basket = localStorage.getItem("basket");
   if (basket == null) {
@@ -42,7 +42,7 @@ function getBasket() {
   }
 };
 
-// fonction d'ajout et de vérifcation même id même couleur
+// fonction d'ajout et de vérification même id même couleur
 
 function addToBasket(productPicked) {
   let basket = getBasket();
@@ -62,7 +62,7 @@ function addToBasket(productPicked) {
   saveBasket(basket);
   alert(" kanap ajouté au panier");
 };
-// function de sauverge du panier dans le localStorage
+// function de sauvegarde du panier dans le localStorage
 function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));
 };

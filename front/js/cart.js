@@ -162,11 +162,11 @@ email.addEventListener("input", function() {
     let emailRegEx  = /^((\w[^\W]+)[.-]?){1,}@(([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
      let emailTest = emailRegEx.test(email.value)
      let messageError = document.getElementById("emailErrorMsg");
-     if(emailTest == false) {
+     if(!emailTest) {
         email.style.color = "red";
         messageError.innerHTML = "Veuillez renseigner une adresse mail valide ";
      }
-     else if (emailTest == true ) {
+     else  {
         email.style.color = "green";
         messageError.innerHTML ="";
 
@@ -174,23 +174,23 @@ email.addEventListener("input", function() {
 });
 // appel de la function de validation des éléments du formulaire 
 
-function formValidationData ( input) {
+function ValidationData ( input) {
     // regex formulaire
     let validationDataRegex =/^[A-Z][A-Za-z-\é\è\ê]+$/;
     // test de la variable regex
     let dataTestName = validationDataRegex.test (input.value);
     let messageError = input.nextElementSibling;
-    if(dataTestName == false) {
+    if(!dataTestName ) {
         input.style.color = "red";
         messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
         
 
-}else  if(dataTestName==true) {
+}else  {
     input.style.color = "green";
     messageError.innerHTML = "";
 }
 };
-function formValidationaddress ( input) {
+function Validationaddress ( input) {
     // regex adresse 
     let validationAddressRegex =  /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
     let dataTest = validationAddressRegex.test (input.value);
@@ -205,26 +205,28 @@ function formValidationaddress ( input) {
 }
 };
 //validation du prénom 
-
+let firstNameValidation;
 firstName.addEventListener('change', function(){
-    formValidationData(this);
+   firstNameValidation = ValidationData(this);
 });
 
 // validation du nom 
-
+let lastNameValidation;
 lastName.addEventListener('change', function(){
-    formValidationData(this);
+    lastNameValidation = ValidationData(this);
 });
 
 // validation de l'adresse 
+let addressValidation;
 address.addEventListener('change', function(){
-    formValidationaddress(this);
+   addressValidation =  Validationaddress(this);
     
 });
 
 // validation de la ville
+let cityValidation;
 city.addEventListener('change', function() {
-    formValidationData;
+  cityValidation =  ValidationData(this);
 });
 
 // fonction pour récupérer les produits et les contacts 
