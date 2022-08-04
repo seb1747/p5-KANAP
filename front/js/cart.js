@@ -127,9 +127,9 @@ function basketDisplay() {
                         window.location.reload();
                     });
                 });
-                // supresson d'un produit du panier 
+                // supression d'un produit du panier 
                 let supressionButton = document.getElementsByClassName("deleteItem");
-                // création d'un tableau pour gérer la saupression  
+                // création d'un tableau pour gérer la supression  
                 Object.values(supressionButton).forEach(deleteProduct => {
                     deleteProduct.addEventListener('click', function() {
                         let article = deleteProduct.closest("article");
