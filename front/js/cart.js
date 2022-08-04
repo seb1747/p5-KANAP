@@ -57,7 +57,7 @@ function changeProductQuantity(id, color, newQuantity) {
         findSameProduct = basket.find (product => product.id == id && product.color == color);
         if (findSameProduct != undefined ) {
             findSameProduct.quantity = newQuantity;
-           window.location.href ="cart.html"
+           window.location.href ="cart.html";
            
         }
         saveBasket(basket);
@@ -161,47 +161,51 @@ let newOrder = document.getElementById("order");
 email.addEventListener("input", function() {
     let emailRegEx  = /^((\w[^\W]+)[.-]?){1,}@(([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
      let emailTest = emailRegEx.test(email.value)
-     let messageError = document.getElementById("emailErrorMsg");
-     if(!emailTest) {
+     let errorMessage = document.getElementById("emailErrorMsg");
+     if(emailTest == false) {
         email.style.color = "red";
-        messageError.innerHTML = "Veuillez renseigner une adresse mail valide ";
-     }
-     else  {
+        errorMessage.innerHTML = "Adresse Email non valide" ;
+        return emailValidation = false;
+    }
+    else {
         email.style.color = "green";
-        messageError.innerHTML ="";
-
-     }
+        errorMessage.innerHTML = "";
+        return emailValidation = true;
+    }
 });
 // appel de la function de validation des éléments du formulaire 
 
 function ValidationData ( input) {
     // regex formulaire
-    let validationDataRegex =/^[A-Z][A-Za-z-\é\è\ê]+$/;
+    let validationDataRegex =/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;
     // test de la variable regex
     let dataTestName = validationDataRegex.test (input.value);
-    let messageError = input.nextElementSibling;
-    if(!dataTestName ) {
-        input.style.color = "red";
-        messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
-        
-
-}else  {
-    input.style.color = "green";
-    messageError.innerHTML = "";
-}
+    let errorMessage = input.nextElementSibling;
+    if(dataTestName == false) {
+            input.style.color = "red";
+            errorMessage.innerHTML = "Caractère non autorisé";
+            return false;
+        }
+        else {
+            input.style.color = "green";
+            errorMessage.innerHTML = "";
+            return true;
+        }
 };
 function Validationaddress ( input) {
     // regex adresse 
     let validationAddressRegex =  /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
-    let dataTest = validationAddressRegex.test (input.value);
-    let messageError = input.nextElementSibling;
-    if(!dataTest ) {
+    let dataTestAddress = validationAddressRegex.test (input.value);
+    let errorMessage = input.nextElementSibling;
+    if(dataTestAddress == false ) {
         input.style.color = "red";
-        messageError.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
+        errorMessage.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
+        return  false;
 
 }else   {
     input.style.color = "green";
     messageError.innerHTML = "";
+    return true;
 }
 };
 //validation du prénom 
