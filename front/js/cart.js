@@ -2,6 +2,11 @@
 
 
 // récupération du localStorage
+/**
+ *
+ *
+ * @return {*} 
+ */
 function getBasket() {
     return JSON.parse(localStorage.getItem('basket'));
 };
@@ -9,12 +14,22 @@ let basket = getBasket();
 
 // function de sauvegarde du panier 
 
+/**
+ *
+ *
+ * @param {*} basket
+ */
 function saveBasket (basket) {
     localStorage.setItem('basket', JSON.stringify(basket));
 };
 
 // fonction de calcul de produit dans le panier 
 
+/**
+ *
+ *
+ * @return {*} 
+ */
 function totalProductBasket () {
     getBasket();
     let numberOfProduct = 0;
@@ -25,6 +40,18 @@ return numberOfProduct;
 };
 // fonction pour supprimer un produit dans le panier
 
+/**
+ *
+ *
+ * @param {*} id
+ * @param {*} color
+ */
+/**
+ *
+ *
+ * @param {*} id
+ * @param {*} color
+ */
 function removeProductOfBasket (id, color) {
     getBasket();
     // création d'un objet avec l'id et la couleur du produit 
@@ -33,7 +60,8 @@ function removeProductOfBasket (id, color) {
     productColor: color
 
 };
-// création d'un nouvel objet panier qui contiendra les éléments du localStorage id et couleur deifférente 
+// création d'un nouvel objet panier qui contiendra les éléments du localStorage id et couleur différente 
+/** @type {*} */
 const newBasket = basket.filter((item) => !(
     item.id == deleteProduct.productId && item.color == deleteProduct.productColor
 ));
@@ -44,6 +72,13 @@ window.location.reload();
 };
 
 // fonction pour le change de quantité depuis le panier 
+/**
+ *
+ *
+ * @param {*} id
+ * @param {*} color
+ * @param {*} newQuantity
+ */
 function changeProductQuantity(id, color, newQuantity) {
     getBasket(basket);
     if (newQuantity < 0 || newQuantity > 100) {
@@ -64,8 +99,14 @@ function changeProductQuantity(id, color, newQuantity) {
     }
 };
 // création de la fonction pour récupérer la totalité des prix de chaque produit 
+/** @type {*} */
 let totalPrice = [];
 // fonction pour le calcul des prix du panier 
+/**
+ *
+ *
+ * @return {*} 
+ */
 function totalBasketPrice() {
     const calculPrice = (accumulator, currentValue) => accumulator + currentValue;
     let total = totalPrice.reduce(calculPrice);
@@ -74,10 +115,15 @@ function totalBasketPrice() {
 };
 
 // function on affiche le panier si celui-ci n'est pas vide 
+/**
+ *
+ *
+ */
 function basketDisplay() {
     if (basket != null) {
         // on verifie qu'il y a quelqque chose dans le panier
-        for ( let productPicked of basket) {
+        for ( /** @type {*} */
+        let productPicked of basket) {
             // récupération des données des produits
             fetch("http://localhost:3000/api/products/" + productPicked.id)
             .then((response) => {
@@ -108,13 +154,15 @@ function basketDisplay() {
                 </article>`
                 //Ajout de la quantité total de canapé dans le panier
                 document.getElementById("totalQuantity").innerHTML = parseInt(totalProductBasket());
+                console.log (totalProductBasket());
                 // calcul du total du panier 
                 let totalProductPrice = parseInt(productPicked.quantity)* parseInt(product.price);
                 totalPrice.push(totalProductPrice);
+                console.log(totalPrice)
                     // ajout du prix total du panier 
                 document.getElementById("totalPrice").innerHTML = totalBasketPrice();
                 // on modifie les quantité 
-                // récupérationde l'input dans le DOM 
+                // récupération de l'input dans le DOM 
                 let input = document.getElementsByClassName("itemQuantity");
                 // création d'un tableau attribut article et la value de l'input 
                 Object.values(input).forEach(quantity => {
@@ -128,6 +176,7 @@ function basketDisplay() {
                     });
                 });
                 // supression d'un produit du panier 
+               
                 let supressionButton = document.getElementsByClassName("deleteItem");
                 // création d'un tableau pour gérer la supression  
                 Object.values(supressionButton).forEach(deleteProduct => {
@@ -162,7 +211,7 @@ email.addEventListener("input", function() {
     let emailRegEx  = /^((\w[^\W]+)[.-]?){1,}@(([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
      let emailTest = emailRegEx.test(email.value)
      let errorMessage = document.getElementById("emailErrorMsg");
-     if(emailTest == false) {
+     if(!emailTest ) {
         email.style.color = "red";
         errorMessage.innerHTML = "Adresse Email non valide" ;
         return emailValidation = false;
@@ -181,7 +230,7 @@ function ValidationData ( input) {
     // test de la variable regex
     let dataTestName = validationDataRegex.test (input.value);
     let errorMessage = input.nextElementSibling;
-    if(dataTestName == false) {
+    if(!dataTestName ) {
             input.style.color = "red";
             errorMessage.innerHTML = "Caractère non autorisé";
             return false;
@@ -196,15 +245,15 @@ function Validationaddress ( input) {
     // regex adresse 
     let validationAddressRegex =  /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
     let dataTestAddress = validationAddressRegex.test (input.value);
-    let errorMessage = input.nextElementSibling;
-    if(dataTestAddress == false ) {
+    let errorMessage = document.getElementById("addressErrorMsg");
+    if(!dataTestAddress  ) {
         input.style.color = "red";
-        errorMessage.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux et les nombres ne sont autorisés";
+        errorMessage.innerHTML = "veuillez renseigner un valeur correct les caractère spéciaux ne sont pas autorisés";
         return  false;
 
 }else   {
     input.style.color = "green";
-    messageError.innerHTML = "";
+    errorMessage.innerHTML = "";
     return true;
 }
 };
@@ -266,8 +315,10 @@ console.log(contact);
 // ecoute du bouton commander pour confirmation de commande
 newOrder.addEventListener("click", (e) => {
     e.preventDefault();
-    if (firstName.value == "" || lastName.value == "" || email.value == "" || city.value == "" || address.value == "") {
+    if (firstName.value == null||firstName.value=== false || lastName.value == null||lastName.value=== false|| email.value == null || email.value===false || city.value == null||
+        city.value===false || address.value == null|| address.value=== false) {
         alert ('veuillez remplir tout les champs ')
+        return false
         
     }
     else {
