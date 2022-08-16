@@ -1,6 +1,6 @@
 let idRecuperation = new URL(window.location.href).searchParams.get('id');
 //recupération des paramètres ID depuis l'adresse URL
-console.log(idRecuperation);
+
 
 fetch("http://localhost:3000/api/products/" + idRecuperation)
   .then((response) => {

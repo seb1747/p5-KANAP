@@ -92,7 +92,7 @@ function changeProductQuantity(id, color, newQuantity) {
         findSameProduct = basket.find (product => product.id == id && product.color == color);
         if (findSameProduct != undefined ) {
             findSameProduct.quantity = newQuantity;
-           window.location.href ="cart.html";
+           //window.location.href ="cart.html";
            
         }
         saveBasket(basket);
@@ -154,11 +154,15 @@ function basketDisplay() {
                 </article>`
                 //Ajout de la quantité total de canapé dans le panier
                 document.getElementById("totalQuantity").innerHTML = parseInt(totalProductBasket());
-                console.log (totalProductBasket());
-                // calcul du total du panier 
-                let totalProductPrice = parseInt(productPicked.quantity)* parseInt(product.price);
-                totalPrice.push(totalProductPrice);
-                console.log(totalPrice)
+               
+               // calcul du total du panier 
+              
+               // supression d'un produit du panier
+                function totalPrice(){
+                      totalProductPrice = parseInt(productPicked.quantity)* parseInt(product.price);
+               totalPrice.push(totalProductPrice);
+                }
+                totalPrice();
                     // ajout du prix total du panier 
                 document.getElementById("totalPrice").innerHTML = totalBasketPrice();
                 // on modifie les quantité 
@@ -166,16 +170,18 @@ function basketDisplay() {
                 let input = document.getElementsByClassName("itemQuantity");
                 // création d'un tableau attribut article et la value de l'input 
                 Object.values(input).forEach(quantity => {
-                    quantity.addEventListener('change', function(){
+                    quantity.addEventListener('input', function(){
                         let article = quantity.closest("article");
                         let id = article.getAttribute("data-id");
                         let color = article.getAttribute("data-color");
                         let newQuantity = quantity.value; 
+                        totalPrice();
                         changeProductQuantity(id, color, newQuantity);
-                        window.location.reload();
-                    });
+                        alert('la quantité du produit a été changé ! ')
+                        //location.reload();
+                    });                     
                 });
-                // supression d'un produit du panier 
+                 
                
                 let supressionButton = document.getElementsByClassName("deleteItem");
                 // création d'un tableau pour gérer la supression  
@@ -185,6 +191,7 @@ function basketDisplay() {
                         let id = article.getAttribute("data-id");
                         let color = article.getAttribute("data-color"); 
                         removeProductOfBasket (id, color);
+                        location.reload();
                     })
                 });
             
@@ -284,10 +291,7 @@ city.addEventListener('change', function() {
 
 // fonction pour récupérer les produits et les contacts 
 function orderDataProduct (){
-    // on créé un tableau vide pour récupérer les produits 
-    
-
-    // crétion du tableau de récupération des données des clients 
+       // création du tableau de récupération des données des clients 
     let contact =  {
         firstName : firstName.value,
         lastName : lastName.value,
@@ -295,6 +299,7 @@ function orderDataProduct (){
         city : city.value,
         email : email.value,
     };
+     // on créé un tableau vide pour récupérer les produits 
     let products =[];
     // boucle pour récupérations des id 
     for(let productlist of basket) {
@@ -335,7 +340,7 @@ newOrder.addEventListener("click", (e) => {
            
         
         .then(response => response.json())
-        .then(data => {console.log(data);
+        .then(data =>  {
             //on efface les données du localStorage
             localStorage.clear();
             // renvoie vers la page de confirmation avec le numéro de commande 

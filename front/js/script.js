@@ -5,7 +5,7 @@ fetch('http://localhost:3000/api/products')
   .then((response) => response.json())
   .then((product) => //creation de la boucle pour appel des produits
   {for (insertproducts of product){
-   console.log(insertproducts)
+  
     products.innerHTML+= `
     <a href="./product.html?id=${insertproducts._id}">       
     <article>
