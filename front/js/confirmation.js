@@ -1,9 +1,13 @@
-//Récupération de orderId dans l'url de la page en cours
-
-let confirmationUrl = window.location.href;
-let url = new URL(confirmationUrl);
-let orderId = url.searchParams.get("orderid");
-
-//Ajout du numéro de commande dans le DOM
-
-document.getElementById("orderId").innerHTML = `${orderId}`;
+// On bascule vers la page de confirmation
+if (document.URL.includes("confirmation.html")) {
+    // Confirmation du numéro de commande
+    const orderId = new URL(window.location.href).searchParams.get("id");
+    let productOrder = () => {
+      const idSelector = document.getElementById("orderId");
+  
+      idSelector.innerHTML = orderId;
+    };
+    productOrder();
+    localStorage.clear();
+  }
+  
